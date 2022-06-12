@@ -6,13 +6,11 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, nullable=False)
-    password = Column(String, nullable=False)
-    name = Column(String, nullable=False)
+    email = Column(String)
+    pwd = Column(String)
+    name = Column(String)
     userable_type = Column(String)
     userable_id = Column(Integer)
-
-    # role = relationship("Student", back_populates="user")
 
 class Student(Base):
     __tablename__ = "student"
@@ -20,8 +18,6 @@ class Student(Base):
     id = Column(Integer, primary_key=True, index=True)
     nisn = Column(String)
     denda = Column(Float)
-
-    # user = relationship("User", back_populates="role")
 
 class Librarian(Base):
     __tablename__ = "librarian"

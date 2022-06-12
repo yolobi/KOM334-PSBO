@@ -19,7 +19,7 @@ def get_all(db: Session = Depends(get_db)):
 def get_by_id(id:int, db: Session = Depends(get_db)):
     book = db.query(models.Book).filter(models.Book.id == id).first()
     if not book:
-        return f'tidak ada buku dengan id {id}'
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Book with id {id} is not found")
     return book
 
 #not worked yet
@@ -32,6 +32,9 @@ def update(id: int, request: schemas.BookCreate, db: Session = Depends(get_db)):
     return book
 
 def destroy(id:int , db: Session = Depends(get_db)):
-    db.query(models.Book).filter(models.Book.id == id).delete(synchronize_session=False)
+    book = db.query(models.Book).filter(models.Book.id == id)
+    if not book:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Book with id {id} is not found")
+    book.delete(synchronize_session=False)
     db.commit()
     return 'Deleted'
