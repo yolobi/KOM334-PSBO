@@ -36,7 +36,7 @@ def update(id: int, request: schemas.StudentBase, db: Session = Depends(get_db))
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Student with id {id} is not found")
     student.update(request)
     db.commit()
-    return student
+    return student.first()
 
 def destroy(id: int, db: Session = Depends(get_db)):
     student = db.query(models.Student).filter(models.Student.id == id)

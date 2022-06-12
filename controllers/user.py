@@ -20,7 +20,7 @@ def update(id: int, request: schemas.UserBase, db: Session = Depends(get_db)):
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} is not found")
     user.update(request)
-    return user
+    return user.first()
 
 def destroy(id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id)

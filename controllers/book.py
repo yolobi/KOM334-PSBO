@@ -27,9 +27,10 @@ def update(id: int, request: schemas.BookCreate, db: Session = Depends(get_db)):
     book = db.query(models.Book).filter(models.Book.id == id)
     if not book:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Book with id {id} is not found")
-    book.update(request)
+
+    book.update(request.dict())
     db.commit()
-    return book
+    return book.first()
 
 def destroy(id:int , db: Session = Depends(get_db)):
     book = db.query(models.Book).filter(models.Book.id == id)
