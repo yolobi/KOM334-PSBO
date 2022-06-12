@@ -11,6 +11,10 @@ router = APIRouter(
     tags=['Librarian']
 )
 
+@router.get('/search')
+def search(query: Optional[str], db: Session = Depends(get_db), current_user: schemas.UserBase = Depends(get_current_user)):
+    return librarian.search_book(query, db)
+
 @router.post('/')
 def create(request: schemas.LibrarianBase, db: Session = Depends(get_db), current_user: schemas.UserBase = Depends(get_current_user)):
     return librarian.create(request, db)
@@ -42,7 +46,3 @@ def destroy_book(id: int, db: Session = Depends(get_db), current_user: schemas.U
 @router.put('/update_book/{id}')
 def edit_book(id: int, request: schemas.BookCreate, db: Session = Depends(get_db), current_user: schemas.UserBase = Depends(get_current_user)):
     return librarian.edit_book(id, request, db)
-
-@router.get('/search')
-def search(query: Optional[str], db: Session = Depends(get_db), current_user: schemas.UserBase = Depends(get_current_user)):
-    return librarian.search_book(query, db)
