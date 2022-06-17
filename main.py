@@ -6,6 +6,10 @@ from routers import book, librarian, log, student, user, auth
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
+app.get('/')
+def root():
+    return 'TUGAS AKHIR PSBO - KOM334'
+
 app.include_router(auth.router)
 app.include_router(book.router)
 app.include_router(librarian.router)
