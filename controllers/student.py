@@ -1,9 +1,10 @@
+from datetime import datetime, date
 from fastapi import Depends, HTTPException, status
+from sqlalchemy import null
 from database import get_db
 import schemas, models
 from sqlalchemy.orm import Session
 from hashing import Hash
-from .import log
 
 
 def create(request: schemas.StudentCreate, db: Session = Depends(get_db)):
@@ -45,3 +46,23 @@ def destroy(id: int, db: Session = Depends(get_db)):
     student.delete(synchronize_session=False)
     db.commit()
     return 'Deleted'
+
+def pinjam_buku(uid: int, bid: int, db: Session = Depends(get_db)):
+    book = db.query(models.Book).filter(models.Book.id == bid)
+    if not book:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Book with id {bid} is not found")
+    book.update({'id_peminjam' : uid, 'status_peminjaman' : True, 'tanggal_peminjaman' : datetime.now()})
+    db.commit()
+    return f"buku {book.first().title} telah dipinjam"
+
+def kembalikan_buku(uid: int, bid: int, db: Session = Depends(get_db)):
+    student = db.query(models.Student).filter(models.Student.id == uid)
+    book = db. query(models.Book).filter(models.Book.id == bid)
+    if not book or not student:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    tax = book.first().tanggal_peminjaman
+    tax = (date.today() - tax) * 1000
+    book.update({'status_peminjaman': False, 'tanggal_peminjaman': date.today(), 'id_peminjam': 0})
+    student.update({'denda': tax})
+    db.commit()
+    return f"buku {book.first().title} telah berhasil dikembalikan"

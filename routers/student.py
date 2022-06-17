@@ -31,3 +31,11 @@ def update(id: int, request: schemas.StudentBase, db: Session = Depends(get_db),
 @router.delete('/{id}')
 def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.UserBase = Depends(get_current_user)):
     return student.destroy(id, db)
+
+@router.put('/pinjam/{uid}/{bid}')
+def pinjam_buku(uid: int, bid:int, db: Session = Depends(get_db)):
+    return student.pinjam_buku(uid, bid, db)
+
+@router.put('/kembalikan/{uid}/{bid}')
+def kembalikan_buku(uid: int, bid: int, db: Session = Depends(get_db)):
+    return student.kembalikan_buku(uid, bid, db)

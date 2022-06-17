@@ -33,6 +33,7 @@ class Book(Base):
     title = Column(String)
     description = Column(String)
     author = Column(String)
+    id_peminjam = Column(Integer)
     status_peminjaman = Column(Boolean, default=False)
     tanggal_peminjaman = Column(Date, default=null, nullable=True)
 
