@@ -32,7 +32,7 @@ def update(id: int, request: schemas.LogBase, db: Session = Depends(get_db)):
 
 def destroy(id: int, db: Session = Depends(get_db)):
     log = db.query(models.Log).filter(models.Log.id == id)
-    if not log:
+    if not log.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"log with id {id} is not found")
     log.delete(synchronize_session=False)
     db.commit()

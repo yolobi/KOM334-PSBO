@@ -48,14 +48,6 @@ class LogBase(BaseModel):
     class Config:
         orm_mode = True
 
-class LogPinjam(BaseModel):
-    name: str
-    book_title: str
-    tanggal_peminjaman: datetime
-
-class LogKembalikan(BaseModel):
-    tanggal_dikembalikan: datetime
-
 class LogCreate(BaseModel):
     name: str
     book_title: str
@@ -69,9 +61,6 @@ class BookCreate(BaseModel):
     title: str
     description: str
     author: str
-
-class QuerySearch(BaseModel):
-    query: str
 
 class Login(BaseModel):
     username: str

@@ -41,7 +41,7 @@ def update(id: int, request: schemas.StudentBase, db: Session = Depends(get_db))
 
 def destroy(id: int, db: Session = Depends(get_db)):
     student = db.query(models.Student).filter(models.Student.id == id)
-    if not student:
+    if not student.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Student with id {id} is not found")
     student.delete(synchronize_session=False)
     db.commit()
@@ -53,7 +53,7 @@ def pinjam_buku(uid: int, bid: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Book with id {bid} is not found")
     book.update({'id_peminjam' : uid, 'status_peminjaman' : True, 'tanggal_peminjaman' : datetime.now()})
     db.commit()
-    return f"buku {book.first().title} telah dipinjam"
+    return f"buku telah dipinjam"
 
 def kembalikan_buku(uid: int, bid: int, db: Session = Depends(get_db)):
     student = db.query(models.Student).filter(models.Student.id == uid)

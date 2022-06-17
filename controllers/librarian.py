@@ -36,7 +36,7 @@ def update(id: int, request: schemas.LibrarianBase, db: Session = Depends(get_db
 
 def destroy(id: int, db: Session = Depends(get_db)):
     librarian = db.query(models.Librarian).filter(models.Librarian.id == id)
-    if not librarian:
+    if not librarian.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Librarian with id {id} is not found")
     librarian.delete(synchronize_session=False)
     db.commit()
@@ -54,3 +54,7 @@ def edit_book(id: int, request: schemas.BookCreate, db: Session = Depends(get_db
 def search_book(query: Optional[str], db: Session = Depends(get_db)):
     res = db.query(models.Book).filter(models.Book.title.contains(query)).all()
     return res
+
+def inspect(id: int, db: Session = Depends(get_db)):
+    books = db.query(models.Book).filter(models.Book.id_peminjam == id).all()
+    return books

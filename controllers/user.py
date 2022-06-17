@@ -24,7 +24,7 @@ def update(id: int, request: schemas.UserBase, db: Session = Depends(get_db)):
 
 def destroy(id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id)
-    if not user:
+    if not user.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} is not found")
     user.delete(synchronize_session=False)
     return 'Deleted'
