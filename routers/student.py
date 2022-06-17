@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import APIRouter, Depends
 
 from database import get_db
@@ -11,6 +12,10 @@ router = APIRouter(
     prefix='/student',
     tags=['Student']
 )
+
+@router.get('/search')
+def search_book(query: Optional[str], db: Session = Depends(get_db), current_user: schemas.UserBase = Depends(get_current_user)):
+    return student.search_book(query, db)
 
 @router.post('/')
 def create(request: schemas.StudentCreate, db: Session = Depends(get_db), current_user: schemas.UserBase = Depends(get_current_user)):
@@ -33,9 +38,9 @@ def destroy(id: int, db: Session = Depends(get_db), current_user: schemas.UserBa
     return student.destroy(id, db)
 
 @router.put('/pinjam/{uid}/{bid}')
-def pinjam_buku(uid: int, bid:int, db: Session = Depends(get_db)):
+def pinjam_buku(uid: int, bid:int, db: Session = Depends(get_db), current_user: schemas.UserBase = Depends(get_current_user)):
     return student.pinjam_buku(uid, bid, db)
 
 @router.put('/kembalikan/{uid}/{bid}')
-def kembalikan_buku(uid: int, bid: int, db: Session = Depends(get_db)):
+def kembalikan_buku(uid: int, bid: int, db: Session = Depends(get_db), current_user: schemas.UserBase = Depends(get_current_user)):
     return student.kembalikan_buku(uid, bid, db)
