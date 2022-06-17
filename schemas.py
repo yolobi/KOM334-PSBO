@@ -1,9 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
-from unicodedata import name
 from pydantic import BaseModel
-from pyrsistent import s
-from sqlalchemy import Date
 
 class BookBase(BaseModel):
     isbn: str
