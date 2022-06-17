@@ -1,6 +1,6 @@
 from datetime import datetime, date
+from typing import Optional
 from fastapi import Depends, HTTPException, status
-from sqlalchemy import null
 from database import get_db
 import schemas, models
 from sqlalchemy.orm import Session
@@ -61,8 +61,12 @@ def kembalikan_buku(uid: int, bid: int, db: Session = Depends(get_db)):
     if not book or not student:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
     tax = book.first().tanggal_peminjaman
-    tax = (date.today() - tax) * 1000
+    tax = (date.today() - tax)
     book.update({'status_peminjaman': False, 'tanggal_peminjaman': date.today(), 'id_peminjam': 0})
-    student.update({'denda': tax})
+    student.update({'denda': tax.days})
     db.commit()
     return f"buku {book.first().title} telah berhasil dikembalikan"
+
+def search_book(query: Optional[str], db: Session = Depends(get_db)):
+    books = db.query(models.Book).filter(models.Book.title.contains(query), models.Book.status_peminjaman == False)
+    return books.all()
